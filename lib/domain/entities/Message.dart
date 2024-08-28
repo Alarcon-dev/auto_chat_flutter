@@ -1,10 +1,9 @@
 enum FromWho { me, your }
 
-class ChatEntitie {
+class Message {
   final String text;
-  final String imageUrl;
+  final String? imageUrl;
   final FromWho fromWho;
 
-  ChatEntitie(
-      {required this.text, required this.imageUrl, required this.fromWho});
+  Message({required this.text, this.imageUrl, required this.fromWho});
 }

@@ -1,4 +1,7 @@
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
+import "package:yes_no_app/domain/entities/message.dart";
+import "package:yes_no_app/presentation/provider/chat_provider.dart";
 import "package:yes_no_app/presentation/widgets/chat/my_message_bubble.dart";
 import "package:yes_no_app/presentation/widgets/chat/your_message_bubble.dart";
 import "package:yes_no_app/presentation/widgets/shared/message_field_box.dart";
@@ -19,22 +22,34 @@ class ChatScreen extends StatelessWidget {
         ),
         title: const Text('Instructora'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                  child: ListView.builder(
-                      itemCount: 25,
-                      itemBuilder: (context, index) {
-                        return index % 2 == 0
-                            ? const MyMessageBubble()
-                            : const YourMessageBubble();
-                      })),
-              const MessageFieldBox(),
-            ],
-          ),
+      body: _ChatView(),
+    );
+  }
+}
+
+class _ChatView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final chatProvider = context.watch<ChatProvider>();
+    final number = chatProvider.messages.length;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+                child: ListView.builder(
+                    itemCount: number,
+                    itemBuilder: (context, index) {
+                      final messageList = chatProvider.messages[index];
+                      return (messageList.fromWho == FromWho.me)
+                          ? MyMessageBubble(message: messageList)
+                          : const YourMessageBubble();
+                    })),
+            MessageFieldBox(
+              onValue: chatProvider.sendMessage,
+            ),
+          ],
         ),
       ),
     );
