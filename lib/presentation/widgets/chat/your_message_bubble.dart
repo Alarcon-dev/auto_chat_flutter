@@ -1,7 +1,10 @@
 import "package:flutter/material.dart";
+import "package:yes_no_app/domain/entities/message.dart";
 
 class YourMessageBubble extends StatelessWidget {
-  const YourMessageBubble({super.key});
+  final Message yourMessage;
+
+  const YourMessageBubble({super.key, required this.yourMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +18,24 @@ class YourMessageBubble extends StatelessWidget {
             decoration: BoxDecoration(
                 color: color.secondary,
                 borderRadius: BorderRadius.circular(10)),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text('Hello aprentice'),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Text(yourMessage.text),
             ),
           ),
         ),
-        _ImageBubble(),
+        _ImageBubble(
+          imageUrl: yourMessage.imageUrl,
+        ),
       ],
     );
   }
 }
 
 class _ImageBubble extends StatelessWidget {
+  final String? imageUrl;
+  const _ImageBubble({required this.imageUrl});
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -36,7 +44,7 @@ class _ImageBubble extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Image.network(
-          'https://yesno.wtf/assets/no/11-e6b930256265890554c1464973ebba55.gif',
+          '$imageUrl',
           height: 150,
           width: size.width * 0.7,
           fit: BoxFit.cover,
@@ -45,6 +53,7 @@ class _ImageBubble extends StatelessWidget {
             return SizedBox(
               height: 150,
               width: size.width * 0.7,
+              child: const Text('Instructora enviando una imagen'),
             );
           },
         ),
